@@ -4,7 +4,7 @@ the resulting packing density, surface area-to-volume ratio, and number of spher
 
 ## Usage
 As building the binaries from source would require cargo, it's easiest to use `cargo install sphere_pack_from_json` to build the binaries for your specific
-architecture.
+architecture. `cargo install --git https://github.com/aleph-oh/sphere_pack_from_json.git` can also be used to install from this repository instead.
 
 The input format for files to be parsed is a JSON list of objects, where each object has a name property expressible as a String,
 a radius property expressible as a floating point value, and a proportion property (which is an integer) with a value between 0 and 255 inclusive.
