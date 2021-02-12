@@ -15,11 +15,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     .get_matches();
     let input = matches.value_of("input").unwrap();
     let json =
-        fs::read_to_string(input).expect(format!("Failed to open input file {}", input).as_str());
+        fs::read_to_string(input)?;
     let spheres = json.parse()?;
     let sim_result = packing::pack(&spheres)?;
     let output = matches.value_of("output").unwrap();
-    fs::write(output, serde_json::to_string(&sim_result)?)
-        .expect(format!("Failed to write to output file {}", output).as_str());
+    fs::write(output, serde_json::to_string(&sim_result)?)?;
     Ok(())
 }
