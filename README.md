@@ -1,4 +1,4 @@
-# sphere_pack
+# sphere_pack_from_json
 This repository uses the implementation of sphere packing in spherical-cow to parse descriptions of spheres provided as JSON objects, and provides
 the resulting packing density, surface area-to-volume ratio, and number of spheres packed. 
 
