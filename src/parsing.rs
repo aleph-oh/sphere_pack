@@ -5,9 +5,9 @@ use std::str::FromStr;
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
 
+#[derive(Error, Debug)]
 /// An enumeration of the different errors that can occur while parsing a string into a Spheres
 /// struct.
-#[derive(Error, Debug)]
 pub(crate) enum ParsingError {
     #[error("failed to parse string")]
     FailedToParse(#[from] serde_json::Error),
@@ -17,19 +17,19 @@ pub(crate) enum ParsingError {
     InvalidProportions,
 }
 
-/// A struct representing a sphere that has not been validated yet.
 #[derive(Debug, Deserialize, PartialEq)]
-struct SpheresRaw(Vec<Sphere>);
+/// A struct representing a sphere that has not been validated yet.
+struct SpheresRaw(Vec<ParsedSphere>);
 
-/// A struct representing the properties of a single sphere type.
 #[derive(Debug, Serialize, Deserialize, PartialEq)]
-pub(crate) struct Sphere {
+/// A struct representing the properties of a single sphere type.
+pub(crate) struct ParsedSphere {
     name: String,
     radius: f64,
     proportion: u8,
 }
 
-impl Sphere {
+impl ParsedSphere {
     pub(crate) fn radius(&self) -> f64 {
         self.radius
     }
@@ -39,9 +39,9 @@ impl Sphere {
     }
 }
 
-/// A struct representing multiple spheres to attempt to pack, after validation.
 #[derive(Debug, Serialize, PartialEq)]
-pub(crate) struct Spheres(Vec<Sphere>);
+/// A struct representing multiple spheres to attempt to pack, after validation.
+pub(crate) struct Spheres(Vec<ParsedSphere>);
 
 impl FromStr for SpheresRaw {
     type Err = ParsingError;
@@ -78,28 +78,28 @@ impl FromStr for Spheres {
 
 impl Spheres {
     /// Provides an iterator over the spheres contained by this struct.
-    pub(crate) fn iter(&self) -> impl Iterator<Item = &Sphere> {
+    pub(crate) fn iter(&self) -> impl Iterator<Item = &ParsedSphere> {
         self.0.iter()
     }
 
-    pub(crate) fn total_volume(&self) -> f64 {
+    pub(crate) fn avg_volume(&self) -> f64 {
         self.0
             .iter()
-            .map(|s| 4.0 / 3.0 * PI * s.radius.powi(3))
-            .sum::<f64>()
+            .map(|s| 4.0 / 3.0 * PI * s.radius.powi(3) * (s.proportion as f64 / 100.))
+            .sum()
     }
 
-    pub(crate) fn total_surface_area(&self) -> f64 {
+    pub(crate) fn avg_surface_area(&self) -> f64 {
         self.0
             .iter()
-            .map(|s| 4.0 * PI * s.radius.powi(2))
-            .sum::<f64>()
+            .map(|s| 4.0 * PI * s.radius.powi(2) * (s.proportion as f64 / 100.))
+            .sum()
     }
 }
 
 #[cfg(test)]
 mod test {
-    use crate::parsing::{validate, ParsingError, Sphere, Spheres, SpheresRaw};
+    use crate::parsing::{validate, ParsedSphere, ParsingError, Spheres, SpheresRaw};
 
     static VALID: &str = r#"
 [
@@ -117,12 +117,12 @@ mod test {
 
     fn valid_spheres_raw() -> SpheresRaw {
         SpheresRaw(vec![
-            Sphere {
+            ParsedSphere {
                 name: String::from("5_micron_Al"),
                 radius: 5.0,
                 proportion: 66,
             },
-            Sphere {
+            ParsedSphere {
                 name: String::from("400_AP"),
                 radius: 400.0,
                 proportion: 34,
@@ -132,12 +132,12 @@ mod test {
 
     fn valid_spheres() -> Spheres {
         Spheres(vec![
-            Sphere {
+            ParsedSphere {
                 name: String::from("5_micron_Al"),
                 radius: 5.0,
                 proportion: 66,
             },
-            Sphere {
+            ParsedSphere {
                 name: String::from("400_AP"),
                 radius: 400.0,
                 proportion: 34,
@@ -161,12 +161,12 @@ mod test {
 
     fn invalid_spheres() -> SpheresRaw {
         SpheresRaw(vec![
-            Sphere {
+            ParsedSphere {
                 name: String::from("5_micron_Al"),
                 radius: 5.0,
                 proportion: 66,
             },
-            Sphere {
+            ParsedSphere {
                 name: String::from("400_AP"),
                 radius: 400.0,
                 proportion: 32,
