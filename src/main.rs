@@ -1,13 +1,11 @@
-#[macro_use]
-extern crate clap;
-extern crate spherical_cow;
+use clap::clap_app;
 
 mod packing;
 mod parsing;
 
 use std::fs;
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let matches = clap::clap_app!(pack =>
+    let matches = clap_app!(pack =>
         (name: "pack")
         (version: "0.1")
         (about: "Attempts to pack spheres into a cube and reports result")

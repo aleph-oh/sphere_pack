@@ -63,7 +63,8 @@ pub(crate) fn pack(spheres: &parsing::Spheres) -> Result<SimOutput, SimError> {
     let container =
         spherical_cow::shapes::Cuboid::new(cube_side / 2., cube_side / 2., cube_side / 2.)
             .expect("Side lengths unexpectedly negative");
-    let mut sizes = WeightedRadiusDistribution::new(spheres.iter().map(|s| (s.radius(), s.proportion())));
+    let mut sizes =
+        WeightedRadiusDistribution::new(spheres.iter().map(|s| (s.radius(), s.proportion())));
     let packed = PackedVolume::new(container, &mut sizes)?;
     Ok(SimOutput {
         volume_fraction: packed.volume_fraction() as f64,
