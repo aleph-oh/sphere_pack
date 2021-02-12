@@ -1,5 +1,5 @@
 [package]
-name = "particle_sim"
+name = "sphere_pack_from_json"
 version = "0.1.0"
 authors = ["Jay Hilton"]
 edition = "2018"
