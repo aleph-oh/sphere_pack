@@ -3,7 +3,7 @@ This repository uses the implementation of sphere packing in spherical-cow to pa
 the resulting packing density, surface area-to-volume ratio, and number of spheres packed. 
 
 ## Usage
-As building the binaries from source would require cargo, it's easiest to use `cargo install sphere_pack` to build the binaries for your specific
+As building the binaries from source would require cargo, it's easiest to use `cargo install sphere_pack_from_json` to build the binaries for your specific
 architecture.
 
 The input format for files to be parsed is a JSON list of objects, where each object has a name property expressible as a String,
