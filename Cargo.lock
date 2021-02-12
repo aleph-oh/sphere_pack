@@ -397,7 +397,7 @@ dependencies = [
 
 [[package]]
 name = "sphere_pack_from_json"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "clap",
  "nalgebra",

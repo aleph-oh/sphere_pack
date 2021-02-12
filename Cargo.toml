@@ -2,7 +2,7 @@
 name = "sphere_pack_from_json"
 description = "A binary used to simulate sphere packing with varying discrete proportions of different sphere sizes"
 license-file = "LICENSE"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["Jay Hilton"]
 edition = "2018"
 
